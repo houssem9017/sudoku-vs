@@ -1,0 +1,152 @@
+{
+  "name": "sudoku-vs",
+  "displayName": "Sudoku VS",
+  "description": "A fully-featured Sudoku game inside VS Code",
+  "version": "0.0.1",
+  "publisher": "houssemdarraji",
+  "license": "MIT",
+  "icon": "icon.png",
+  "keywords": [
+    "sudoku",
+    "game",
+    "puzzle",
+    "vscode",
+    "extension",
+    "numbers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/houssem9017/sudoku-vs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/houssem9017/sudoku-vs/issues"
+  },
+  "engines": {
+    "vscode": "^1.120.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "sudoku-vs.newGame",
+        "title": "Sudoku: New Game",
+        "icon": "$(add)"
+      },
+      {
+        "command": "sudoku-vs.continueGame",
+        "title": "Sudoku: Continue Game"
+      },
+      {
+        "command": "sudoku-vs.dailyChallenge",
+        "title": "Sudoku: Daily Challenge"
+      },
+      {
+        "command": "sudoku-vs.statistics",
+        "title": "Sudoku: Statistics"
+      },
+      {
+        "command": "sudoku-vs.settings",
+        "title": "Sudoku: Settings"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "sudoku-vs",
+          "title": "Sudoku VS",
+          "icon": "$(symbol-number)"
+        }
+      ]
+    },
+    "views": {
+      "sudoku-vs": [
+        {
+          "type": "webview",
+          "id": "sudoku-vs.gameView",
+          "name": "Sudoku"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Sudoku VS",
+      "properties": {
+        "sudoku-vs.theme": {
+          "type": "string",
+          "default": "auto",
+          "enum": ["auto", "light", "dark", "classic"],
+          "description": "Theme for the Sudoku board"
+        },
+        "sudoku-vs.autoNotes": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically calculate possible candidates"
+        },
+        "sudoku-vs.maxMistakes": {
+          "type": "number",
+          "default": 3,
+          "minimum": 0,
+          "maximum": 9,
+          "description": "Maximum mistakes allowed (0 = disabled)"
+        },
+        "sudoku-vs.showErrors": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show errors on the board"
+        },
+        "sudoku-vs.pauseOnBlur": {
+          "type": "boolean",
+          "default": true,
+          "description": "Pause game when webview loses focus"
+        },
+        "sudoku-vs.enableHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable hints"
+        },
+        "sudoku-vs.inputProfile": {
+          "type": "string",
+          "default": "default",
+          "enum": ["default", "azerty", "qwerty", "custom"],
+          "description": "Input key mapping profile"
+        },
+        "sudoku-vs.customKeyMap": {
+          "type": "object",
+          "default": {},
+          "description": "Custom key mapping (key -> number)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "package": "npm run check-types && npm run lint && node esbuild.js --production",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.120.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "22.x",
+    "typescript-eslint": "^8.56.1",
+    "eslint": "^9.39.3",
+    "esbuild": "^0.27.3",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.9.3",
+    "@vscode/test-cli": "^0.0.12",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}

@@ -1,0 +1,533 @@
+/* Sudoku VS — Polished VS Code Native Theme */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.hidden { display: none !important; }
+
+:root {
+  --cell-size: 32px;
+  --grid-gap: 1px;
+  --border-thick: 2px;
+}
+
+body {
+  font-family: var(--vscode-font-family, -apple-system, sans-serif);
+  font-size: var(--vscode-font-size, 13px);
+  color: var(--vscode-foreground);
+  background: var(--vscode-sideBar-background, var(--vscode-editor-background));
+  overflow: hidden;
+  user-select: none;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── Layout ── */
+.sudoku-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 4px;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ── Header bar ── */
+.sudoku-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 310px;
+  padding: 2px 4px;
+}
+
+.sudoku-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sudoku-diff {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+}
+
+.sudoku-timer {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--vscode-foreground);
+  font-family: var(--vscode-editor-font-family, monospace);
+}
+
+.sudoku-mistakes {
+  font-size: 11px;
+  color: var(--vscode-errorForeground, #f48771);
+  font-weight: 500;
+}
+
+/* ── Hint banner ── */
+.sudoku-hint-banner {
+  width: 100%;
+  max-width: 310px;
+  background: var(--vscode-editorWarning-background, rgba(255, 204, 0, 0.1));
+  border: 1px solid var(--vscode-editorWarning-foreground, #ffcc00);
+  border-radius: 4px;
+  padding: 8px 10px;
+  text-align: center;
+}
+
+.hint-text {
+  font-size: 11px;
+  color: var(--vscode-foreground);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.hint-actions {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hint-btn {
+  padding: 4px 12px;
+  font-size: 11px;
+}
+
+.hint-btn-dismiss {
+  background: var(--vscode-button-secondaryBackground, rgba(128,128,128,0.15));
+  color: var(--vscode-button-secondaryForeground, var(--vscode-foreground));
+}
+
+.hint-btn-dismiss:hover {
+  background: var(--vscode-button-secondaryHoverBackground, rgba(128,128,128,0.25));
+}
+
+/* Hint highlight on the cell */
+.sudoku-cell.hint-highlight {
+  background: rgba(255, 204, 0, 0.2) !important;
+  box-shadow: inset 0 0 0 2px var(--vscode-editorWarning-foreground, #ffcc00);
+  animation: hint-pulse 1.2s ease-in-out infinite;
+  z-index: 3;
+}
+
+@keyframes hint-pulse {
+  0%, 100% {
+    background: rgba(255, 204, 0, 0.2) !important;
+    box-shadow: inset 0 0 0 2px var(--vscode-editorWarning-foreground, #ffcc00), 0 0 4px rgba(255, 204, 0, 0.2);
+  }
+  50% {
+    background: rgba(255, 204, 0, 0.45) !important;
+    box-shadow: inset 0 0 0 3px var(--vscode-editorWarning-foreground, #ffcc00), 0 0 12px rgba(255, 204, 0, 0.5);
+  }
+}
+
+/* Cell fill animation — pop with glow */
+.sudoku-cell.cell-fill-anim {
+  animation: cell-fill-flash 0.4s ease-out;
+  z-index: 4;
+}
+.sudoku-cell.cell-fill-anim .cell-value {
+  animation: cell-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cell-fill-flash {
+  0% { box-shadow: inset 0 0 0 2px rgba(51, 153, 255, 0.6), 0 0 6px rgba(51, 153, 255, 0.3); }
+  100% { box-shadow: none; }
+}
+
+@keyframes cell-pop {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  70% { transform: scale(0.95); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Line/box completion — double green flash, slow and visible */
+.sudoku-cell.line-complete-anim {
+  animation: line-flash 1.8s ease-in-out both;
+  z-index: 4;
+}
+
+@keyframes line-flash {
+  0%   { box-shadow: none; }
+  15%  { box-shadow: inset 0 0 0 3px rgba(78, 201, 176, 0.9), 0 0 10px rgba(78, 201, 176, 0.4); }
+  40%  { box-shadow: inset 0 0 0 3px rgba(78, 201, 176, 0.9), 0 0 10px rgba(78, 201, 176, 0.4); }
+  100% { box-shadow: none; }
+}
+
+/* ── Board ── */
+.sudoku-board {
+  display: grid;
+  grid-template-columns: repeat(9, var(--cell-size));
+  grid-template-rows: repeat(9, var(--cell-size));
+  gap: 0;
+  border: var(--border-thick) solid var(--vscode-foreground);
+  background: var(--vscode-panel-border, #3c3c3c);
+}
+
+.sudoku-cell {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--vscode-editor-background);
+  border-right: 1px solid var(--vscode-panel-border, #3c3c3c);
+  border-bottom: 1px solid var(--vscode-panel-border, #3c3c3c);
+  cursor: pointer;
+  position: relative;
+}
+
+/* 3×3 box borders */
+.sudoku-cell:nth-child(3n) { border-right: var(--border-thick) solid var(--vscode-foreground); }
+.sudoku-cell:nth-child(9n) { border-right: none; }
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+  border-bottom: var(--border-thick) solid var(--vscode-foreground);
+}
+.sudoku-cell:nth-child(n+73) { border-bottom: none; }
+
+.sudoku-cell:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+/* Row / column / box highlight — subtle blue tint */
+.sudoku-cell.highlighted {
+  background: rgba(51, 153, 255, 0.12);
+}
+
+/* Same number as selected — stronger blue */
+.sudoku-cell.same-number {
+  background: rgba(51, 153, 255, 0.28);
+}
+.sudoku-cell.same-number .cell-value {
+  color: var(--vscode-textLink-activeForeground, #4daafc);
+  font-weight: 700;
+}
+
+/* The actually selected cell — strongest highlight */
+.sudoku-cell.selected {
+  background: rgba(51, 153, 255, 0.45) !important;
+  box-shadow: inset 0 0 0 2px var(--vscode-focusBorder, #007fd4);
+  z-index: 2;
+}
+.sudoku-cell.selected .cell-value {
+  color: var(--vscode-button-foreground, #fff) !important;
+  font-weight: 700;
+  text-shadow: 0 0 3px rgba(0,0,0,0.4);
+}
+
+.sudoku-cell.given .cell-value {
+  color: var(--vscode-foreground);
+  font-weight: 700;
+}
+
+.sudoku-cell.user .cell-value {
+  color: var(--vscode-textLink-foreground, #3794ff);
+  font-weight: 500;
+}
+
+.sudoku-cell.error {
+  background: rgba(244, 135, 113, 0.15) !important;
+}
+.sudoku-cell.error .cell-value {
+  color: var(--vscode-errorForeground, #f48771) !important;
+}
+
+.cell-value {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.cell-notes {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; left: 0;
+  padding: 1px 2px;
+}
+
+.note-digit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  line-height: 1;
+  color: var(--vscode-descriptionForeground, #858585);
+  visibility: hidden; /* hidden by default; .active or JS makes visible */
+}
+
+.note-digit.active {
+  color: var(--vscode-foreground);
+  font-weight: 600;
+  visibility: visible;
+}
+
+/* ── Board celebration animation ── */
+.sudoku-cell.cell-celebrate {
+  animation: cell-celebrate 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation-delay: var(--cell-delay, 0s);
+}
+
+@keyframes cell-celebrate {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.18); box-shadow: inset 0 0 8px var(--celebrate-glow, rgba(78,201,176,0.5)), 0 0 14px var(--celebrate-glow, rgba(78,201,176,0.3)); }
+  70%  { transform: scale(0.95); }
+  100% { transform: scale(1); box-shadow: none; }
+}
+
+/* ── Overlay ── */
+.sudoku-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  border-radius: 2px;
+}
+
+.sudoku-overlay.won {
+  background: rgba(0,0,0,0.5);
+}
+
+.sudoku-overlay.lost {
+  background: rgba(0,0,0,0.55);
+}
+/* .hidden class used universally */
+
+.overlay-box {
+  background: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  padding: 20px 24px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+  min-width: 180px;
+}
+
+.overlay-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.overlay-sub {
+  font-size: 12px;
+  color: var(--vscode-descriptionForeground);
+  margin-bottom: 14px;
+}
+
+.overlay-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+}
+
+.overlay-buttons .sudoku-mbtn {
+  min-width: 140px;
+}
+
+/* ── Toolbar ── */
+.sudoku-toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 2px;
+  width: 100%;
+  max-width: 310px;
+}
+
+.sudoku-tbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--vscode-foreground);
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.85;
+  transition: opacity 0.1s, background 0.1s;
+}
+
+.sudoku-tbtn:hover {
+  opacity: 1;
+  background: var(--vscode-toolbar-hoverBackground, rgba(128,128,128,0.15));
+}
+
+.sudoku-tbtn.active {
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  opacity: 1;
+}
+
+.sudoku-tbtn.disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+/* ── Number pad ── */
+.sudoku-numpad {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 2px;
+  width: 100%;
+  max-width: 310px;
+}
+
+.sudoku-num {
+  height: 30px;
+  border: none;
+  border-radius: 3px;
+  background: var(--vscode-button-secondaryBackground, rgba(128,128,128,0.12));
+  color: var(--vscode-button-secondaryForeground, var(--vscode-foreground));
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.1s, opacity 0.1s;
+  position: relative;
+}
+
+.sudoku-num:hover {
+  background: var(--vscode-button-secondaryHoverBackground, rgba(128,128,128,0.25));
+}
+
+.sudoku-num.num-complete {
+  opacity: 0.25;
+  cursor: default;
+  text-decoration: line-through;
+}
+
+.sudoku-num.num-complete:hover {
+  background: var(--vscode-button-secondaryBackground, rgba(128,128,128,0.12));
+}
+
+/* ── Menu ── */
+.sudoku-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 8px;
+  width: 100%;
+  max-width: 260px;
+}
+/* .hidden class used universally */
+
+.sudoku-mbtn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 4px;
+  background: var(--vscode-button-background, #0e639c);
+  color: var(--vscode-button-foreground, #fff);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: background 0.1s;
+}
+
+.sudoku-mbtn:hover {
+  background: var(--vscode-button-hoverBackground, #1177bb);
+}
+
+/* ── Stats overlay ── */
+.stats-overlay {
+  min-width: 340px;
+  max-width: 380px;
+}
+
+/* Summary cards */
+.stats-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin: 12px 0;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px;
+  border-radius: 4px;
+  background: var(--vscode-input-background, rgba(128,128,128,0.08));
+}
+
+.stat-card-val {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--vscode-textLink-foreground, #3794ff);
+}
+.stat-card-val.stat-card-green { color: var(--vscode-terminal-ansiGreen, #4ec9b0); }
+.stat-card-val.stat-card-red { color: var(--vscode-errorForeground, #f48771); }
+.stat-card-val.stat-card-blue { color: var(--vscode-textLink-foreground, #3794ff); }
+
+.stat-card-lbl {
+  font-size: 9px;
+  color: var(--vscode-descriptionForeground);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* Per-difficulty table */
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0 14px;
+  font-size: 11px;
+}
+
+.stats-th {
+  text-align: center;
+  padding: 4px 6px;
+  font-size: 9px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--vscode-descriptionForeground);
+  border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+.stats-diff-row td {
+  text-align: center;
+  padding: 5px 6px;
+}
+
+.stats-diff-name {
+  font-weight: 600;
+  text-align: left !important;
+  padding-left: 8px !important;
+}
+
+.stats-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--vscode-foreground);
+}
+
+.stats-wr {
+  font-weight: 600;
+  color: var(--vscode-textLink-foreground, #3794ff);
+}
