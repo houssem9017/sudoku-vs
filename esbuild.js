@@ -1,4 +1,6 @@
 const esbuild = require("esbuild");
+const fs = require("fs");
+const path = require("path");
 
 const production = process.argv.includes('--production');
 const watch = process.argv.includes('--watch');
@@ -60,6 +62,12 @@ async function main() {
 			esbuildProblemMatcherPlugin,
 		],
 	});
+
+	// Copy CSS to dist so it's included in VSIX
+	const cssSrc = path.join(__dirname, 'src', 'webview', 'style.css');
+	const cssDst = path.join(__dirname, 'dist', 'webview', 'style.css');
+	fs.mkdirSync(path.dirname(cssDst), { recursive: true });
+	fs.copyFileSync(cssSrc, cssDst);
 
 	if (watch) {
 		await Promise.all([extCtx.watch(), webviewCtx.watch()]);

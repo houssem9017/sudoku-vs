@@ -2,7 +2,7 @@
   "name": "sudoku-vs",
   "displayName": "Sudoku VS",
   "description": "A fully-featured Sudoku game inside VS Code",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "houssemdarraji",
   "license": "MIT",
   "icon": "icon.png",

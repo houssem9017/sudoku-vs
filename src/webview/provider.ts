@@ -89,7 +89,7 @@ export class SudokuViewProvider implements vscode.WebviewViewProvider {
 
     const webview = this._view.webview;
     const styleUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this._extensionUri, 'src', 'webview', 'style.css')
+      vscode.Uri.joinPath(this._extensionUri, 'dist', 'webview', 'style.css')
     );
     const scriptUri = webview.asWebviewUri(
       vscode.Uri.joinPath(this._extensionUri, 'dist', 'webview', 'main.js')

@@ -8,9 +8,9 @@ A fully-featured Sudoku game inside VS Code. Play Sudoku without leaving your ed
 |:---:|:---:|
 | ![Board](screenshots/board3.png) | ![Board](screenshots/board2.png) |
 
-| Game Board | Statistics |
+| Menu | Statistics |
 |:---:|:---:|
-| ![Board](screenshots/board1.png) | ![Stats](screenshots/statistics.png) |
+| ![Board](screenshots/menu.png) | ![Stats](screenshots/statistics.png) |
 
 ## Features
 
