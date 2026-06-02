@@ -2,6 +2,16 @@
 
 A fully-featured Sudoku game inside VS Code. Play Sudoku without leaving your editor!
 
+## Screenshots
+
+| Menu | Game Board |
+|:---:|:---:|
+| ![Menu](screenshots/menu.png) | ![Board](screenshots/board.png) |
+
+| Daily Challenge | Statistics | Settings |
+|:---:|:---:|:---:|
+| ![Daily](screenshots/daily.png) | ![Stats](screenshots/stats.png) | ![Settings](screenshots/settings.png) |
+
 ## Features
 
 - **Classic Sudoku** - Play randomly generated puzzles at various difficulty levels
@@ -26,9 +36,11 @@ A fully-featured Sudoku game inside VS Code. Play Sudoku without leaving your ed
 | `Sudoku: Continue Game` | Resume your last game |
 | `Sudoku: Daily Challenge` | Play today's puzzle |
 | `Sudoku: Statistics` | View your game statistics |
-| `Sudoku: Settings` | Configure Sudoku VS |
+| `Sudoku: Settings` | Open VS Code settings for Sudoku VS |
 
-## Settings
+## Extension Settings
+
+These are VS Code extension settings — accessible via `Sudoku: Settings` from the Command Palette, or go to `File > Preferences > Settings` and search for "sudoku-vs".
 
 | Setting | Description |
 |---------|-------------|

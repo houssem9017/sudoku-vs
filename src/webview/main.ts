@@ -148,6 +148,7 @@ function buildUI() {
     <button class="sudoku-mbtn" id="m-cont">Continue Game</button>
     <button class="sudoku-mbtn" id="m-daily">Daily Challenge</button>
     <button class="sudoku-mbtn" id="m-stats">Statistics</button>
+    <button class="sudoku-mbtn" id="m-settings">Settings</button>
   `;
   wrap.appendChild(menu);
 
@@ -187,6 +188,7 @@ function bindEvents() {
   byId('m-cont').addEventListener('click', () => post('continueGame'));
   byId('m-daily').addEventListener('click', () => post('dailyChallenge'));
   byId('m-stats').addEventListener('click', () => post('statistics'));
+  byId('m-settings').addEventListener('click', () => post('settings'));
 
   // Hint banner buttons
   byId('hint-apply').addEventListener('click', () => {
