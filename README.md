@@ -6,11 +6,11 @@ A fully-featured Sudoku game inside VS Code. Play Sudoku without leaving your ed
 
 | Menu | Game Board |
 |:---:|:---:|
-| ![Menu](screenshots/menu.png) | ![Board](screenshots/board.png) |
+| ![Menu](screenshots/menu.png) | ![Board](screenshots/board1.png) |
 
-| Daily Challenge | Statistics | Settings |
+| Game Board | Game Board | Statistics |
 |:---:|:---:|:---:|
-| ![Daily](screenshots/daily.png) | ![Stats](screenshots/stats.png) | ![Settings](screenshots/settings.png) |
+| ![Board](screenshots/board2.png) | ![Board](screenshots/board3.png) | ![Stats](screenshots/statistics.png) |
 
 ## Features
 
