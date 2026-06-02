@@ -4,13 +4,13 @@ A fully-featured Sudoku game inside VS Code. Play Sudoku without leaving your ed
 
 ## Screenshots
 
-| Menu | Game Board |
+| Menu | Game Board | Game Board |
 |:---:|:---:|
-| ![Menu](screenshots/menu.png) | ![Board](screenshots/board1.png) |
+| ![Menu](screenshots/menu.png) | ![Board](screenshots/board2.png) |
 
-| Game Board | Game Board | Statistics |
+| Game Board | Statistics |
 |:---:|:---:|:---:|
-| ![Board](screenshots/board2.png) | ![Board](screenshots/board3.png) | ![Stats](screenshots/statistics.png) |
+| ![Board](screenshots/board3.png) | ![Stats](screenshots/statistics.png) |
 
 ## Features
 
