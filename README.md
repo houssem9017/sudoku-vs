@@ -6,7 +6,7 @@ A fully-featured Sudoku game inside VS Code. Play Sudoku without leaving your ed
 
 | Menu | Game Board |
 |:---:|:---:|
-| ![Menu](screenshots/menu.png) | ![Board](screenshots/board2.png) |
+| ![Menu](screenshots/menu copy.png) | ![Board](screenshots/board2.png) |
 
 | Game Board | Statistics |
 |:---:|:---:|
